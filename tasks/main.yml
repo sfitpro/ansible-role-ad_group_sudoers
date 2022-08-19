@@ -1,0 +1,36 @@
+---
+# tasks file for ad_group_sudoers
+- name: replace each space with \space, each ( with \(, each ) with \) in ad_group_name
+  ansible.builtin.set_fact:
+    ad_group_name_regexp: "{{ ad_group_name | regex_escape() }}"
+
+- name: display ad_group_name_regexp
+  ansible.builtin.debug:
+    msg: "{{ ad_group_name_regexp }}"
+
+- name: replace each ( or ) with _ in ad_group_name as its sudoers filename
+  ansible.builtin.set_fact:
+    sudoers_filename: "{{ ad_group_name | regex_replace('[()\\s]', '_') }}"
+
+- name: display sudoers_filename
+  ansible.builtin.debug:
+    msg: "{{ sudoers_filename }}"
+
+- name: create sudoers file
+  become: true
+  ansible.builtin.file:
+    path: "/etc/sudoers.d/{{ sudoers_filename }}"
+    state: touch
+    mode: "0600"
+    owner: root
+    modification_time: preserve
+    access_time: preserve
+
+- name: add AD group to sudoers file
+  become: true
+  ansible.builtin.lineinfile:
+    path: "/etc/sudoers.d/{{ sudoers_filename }}"
+    state: present
+    line: "%{{ ad_group_name_regexp }} ALL=(ALL) ALL"
+    validate: /usr/sbin/visudo -cf %s
+    backup: false

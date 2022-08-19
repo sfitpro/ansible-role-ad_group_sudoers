@@ -1,0 +1,6 @@
+---
+# defaults file for ad_group_sudoers
+# variables for configuring sudoers
+ad_group_names:
+  - "My AD Admins (G)"
+  - "My Security Admins"
