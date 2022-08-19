@@ -21,7 +21,7 @@ ad_group_names:
   - "My Security Admins"
 ```
 
-Set these variables in group_vars/redhat.yml to overwrite the default value.
+Set these variables in host_vars/hostname.yml to overwrite the default value.
 
 Dependencies
 ------------
