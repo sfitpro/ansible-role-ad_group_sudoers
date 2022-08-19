@@ -45,7 +45,7 @@ Example Playbook
         ad_group_name: "{{ item }}"
       loop: "{{ ad_group_names }}"
       tags:
-        - suoders
+        - sudoers
 ```
 
 License
